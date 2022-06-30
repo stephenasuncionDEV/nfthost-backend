@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest -i",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "vercel dev"
   },
   "repository": {
     "type": "git",
