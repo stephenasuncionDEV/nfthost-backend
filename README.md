@@ -30,18 +30,24 @@
 npm i 
 npm run dev
 ```
+or
+
+```
+https://hub.docker.com/repository/docker/stephenasuncion/nfthost-backend
+```
+
 
 ## Environment Variables
 
-| .env                      |
-| ------------------------- |
-| MONGODB_URI               |
-| ACCESS_TOKEN_SECRET       |
-| REFRESH_TOKEN_SECRET      |
-| THIRDPARTY_TOKEN_SECRET   |
-| STRIPE_SECRET             |
-| DOCKER_HUB_ACCESS_TOKEN   |
-| DOCKER_HUB_USERNAME       |
+| .env                    |
+| ----------------------- |
+| MONGODB_URI             |
+| ACCESS_TOKEN_SECRET     |
+| REFRESH_TOKEN_SECRET    |
+| THIRDPARTY_TOKEN_SECRET |
+| STRIPE_SECRET           |
+| DOCKER_HUB_ACCESS_TOKEN |
+| DOCKER_HUB_USERNAME     |
 
 ## Support
 
