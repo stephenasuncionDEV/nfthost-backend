@@ -7,7 +7,7 @@
 <h1 align="center">NFT Host - Backend</h1>
 
 <p align="center">
-    <img src='https://github.com/stephenasuncionDEV/nfthost-backend/actions/workflows/docker-deployment.yml/badge.svg' alt='Docker Deployment'>
+    <img src='https://github.com/stephenasuncionDEV/nfthost-backend/actions/workflows/docker-deployment.yml/badge.svg?branch=main' alt='Docker Deployment'>
     <a href="https://discord.gg/BMZZXZMnmv" rel="nofollow">
         <img src='https://img.shields.io/discord/925910496354381854.svg?color=7289da&label=discord&logo=discord&style=flat' alt='NFTHost Discord' />
     </a>
