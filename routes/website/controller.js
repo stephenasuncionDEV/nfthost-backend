@@ -127,7 +127,11 @@ exports.getFeatured = async (req, res, next) => {
         const errors = validationResult(req).errors;
         if (errors.length > 0) throw new Error(errors[0].msg);
 
-        const result = await Website.aggregate([{$sample: {size: 5}}]);
+        const result = await Website.aggregate([{
+            $sample: {
+                size: 5
+            }
+        }]);
 
         res.status(200).json(result);
 
