@@ -340,6 +340,10 @@ exports.GetPaymentsValidator = [
     check('memberId', 'memberId is empty')
     .notEmpty(),
 
+    // pageNumber Validator
+    check('pageNumber', 'pageNumber is empty')
+    .notEmpty(),
+
 ]
 
 exports.VerifyDomainValidator = [
