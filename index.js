@@ -7,17 +7,21 @@ const router = require('./routes');
 const app = express();
 const { errorHandler } = require('./middlewares/errorHandler');
 
-// const { generateThirdPartyToken } = require('../middlewares/jwt');
-// console.log(generateThirdPartyToken({ origin: 'https://www.nfthost.app/' }))
-
 // Database
 const connection = require('./db/connection');
 
-// Express Config
-app.options(cors());
+// Cors
+const corsOption = {
+    origin: ['http://localhost:3000', 'https://www.nfthost.app/'],
+    optionsSuccessStatus: 200
+}
+app.options(cors(corsOption));
 app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if(corsOption.origin.includes(origin)){
+        res.header("Access-Control-Allow-Origin", origin);
+    }        
     res.header("Access-Control-Allow-Credentials", 'true');
-    res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Methods", 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     if (req.method === 'OPTIONS') {
@@ -25,6 +29,8 @@ app.use((req, res, next) => {
     }
     next();
 })
+
+// Express Config
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use('/api', router);
@@ -39,3 +45,6 @@ connection.once('open', () => {
 });
 
 module.exports = app;
+
+// const { generateThirdPartyToken } = require('../middlewares/jwt');
+// console.log(generateThirdPartyToken({ origin: 'https://www.nfthost.app/' }))
