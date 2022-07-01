@@ -12,7 +12,7 @@ const connection = require('./db/connection');
 
 // Cors
 const corsOption = {
-    origin: ['http://localhost:3000', 'https://www.nfthost.app/'],
+    origin: ['http://localhost:3000', 'https://www.nfthost.app'],
     optionsSuccessStatus: 200
 }
 app.options(cors(corsOption));
