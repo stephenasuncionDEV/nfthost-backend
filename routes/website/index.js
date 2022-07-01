@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const controller = require('./controller');
-const { authenticateToken, authenticateThirdPartyToken } = require('../../middlewares/jwt');
+const { authenticateToken, authenticateThirdPartyToken } = require('#middlewares/jwt.js');
 const { 
     CreateWebsiteValidator, 
     GetWebsiteValidator,
@@ -20,7 +20,7 @@ const {
     VerifyDomainValidator,
     GetWebsiteByDomainValidator,
     UpdateExternalLinkValidator
-} = require('../../middlewares/validators');
+} = require('#middlewares/validators.js');
 
 router.post('/create', authenticateThirdPartyToken, CreateWebsiteValidator, controller.createWebsite);
 router.get('/get', authenticateThirdPartyToken, GetWebsiteValidator, controller.getWebsite);

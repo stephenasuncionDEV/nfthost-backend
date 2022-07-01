@@ -3,9 +3,9 @@ const path = require('path');
 require('dotenv').config({path: path.join(__dirname, '.env')});
 const express = require('express');
 const cors = require('cors');
-const router = require('./routes');
+const router = require('#routes/index.js');
 const app = express();
-const { errorHandler } = require('./middlewares/errorHandler');
+const { errorHandler } = require('#middlewares/errorHandler.js');
 
 // Database
 const connection = require('./db/connection');

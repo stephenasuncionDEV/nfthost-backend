@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { Payment } = require('../../models/Payments');
+const { Payment } = require('#models/Payments.js');
 const Stripe = require('stripe');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);

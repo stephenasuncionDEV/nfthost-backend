@@ -10,8 +10,8 @@ const {
     UpdateEmailValidator,
     LogoutValidator,
     RenewTokenValidator
-} = require('../../middlewares/validators');
-const { authenticateToken } = require('../../middlewares/jwt');
+} = require('#middlewares/validators.js');
+const { authenticateToken } = require('#middlewares/jwt.js');
 
 router.post('/walletLogin', WalletLoginValidator, controller.walletLogin);
 router.get('/getByAddress', authenticateToken, GetMemberByAddressValidator, controller.getMemberByAddress);

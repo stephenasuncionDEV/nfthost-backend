@@ -1,7 +1,7 @@
-const { generateAccessToken, generateRefreshToken, generateThirdPartyToken } = require('../../middlewares/jwt');
+const { generateAccessToken, generateRefreshToken } = require('#middlewares/jwt.js');
 const { validationResult } = require('express-validator');
-const { Member } = require('../../models/Members');
-const { Token } = require('../../models/Tokens');
+const { Member } = require('#models/Members.js');
+const { Token } = require('#models/Tokens.js');
 const jwt = require('jsonwebtoken');
 
 exports.walletLogin = async (req, res, next) => {

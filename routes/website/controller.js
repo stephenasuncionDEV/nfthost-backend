@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
-const { Website } = require('../../models/Websites');
-const { ParseWebsiteData, EncodeWebsiteData, VerifyDns } = require('../../middlewares/tools');
+const { Website } = require('#models/Websites.js');
+const { ParseWebsiteData, EncodeWebsiteData, VerifyDns } = require('#middlewares/tools.js');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
