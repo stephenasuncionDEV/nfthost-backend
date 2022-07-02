@@ -37,7 +37,6 @@ router.patch('/updateAnalytics', authenticateThirdPartyToken, UpdateAnalyticsVal
 router.patch('/updateComponents', authenticateToken, UpdateComponentsValidator, controller.updateComponents);
 router.patch('/updateSubscription', authenticateToken, UpdateSubscriptionValidator, controller.updateSubscription);
 router.delete('/deleteAddon', authenticateToken, DeleteAddonValidator, controller.deleteAddon);
-router.get('/getFeatured', authenticateToken, controller.getFeatured);
 router.patch('/renewSubscription', authenticateToken, RenewSubscriptionValidator, controller.renewSubscription);
 router.post('/verifyDomain', authenticateToken, VerifyDomainValidator, controller.verifyDomain);
 router.patch('/updateExternalLink', authenticateToken, UpdateExternalLinkValidator, controller.updateExternalLink);
