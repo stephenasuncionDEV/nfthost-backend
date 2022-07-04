@@ -225,8 +225,8 @@ exports.UpdateStyleValidator = [
     check('websiteId', 'websiteId is empty')
     .notEmpty(),
 
-    // style Validator
-    check('style', 'style is empty')
+    // data Validator
+    check('data', 'data is empty')
     .notEmpty(),
 ]
 

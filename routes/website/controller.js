@@ -216,27 +216,15 @@ exports.updateStyle = async (req, res, next) => {
         const errors = validationResult(req).errors;
         if (errors.length > 0) throw new Error(errors[0].msg);
 
-        const { websiteId, style } = req.body;
-
-        const currentWebsite = await Website.findOne({ _id: websiteId });
-
-        if (!currentWebsite) throw new Error('Cannot fetch website');
-
-        let decompressedObj = ParseWebsiteData(currentWebsite.data);
-
-        if (!decompressedObj) throw new Error('Cannot decompress data');
-
-        decompressedObj.style = style;
-
-        const compressed = EncodeWebsiteData(decompressedObj);
+        const { websiteId, data } = req.body;
 
         await Website.updateOne({ _id: websiteId }, {
             $set: { 
-                data: compressed
+                data
             }
         });
 
-        res.status(200).json({ data: compressed });
+        res.status(200).json({ data });
 
     } catch (err) {
         next(err);
