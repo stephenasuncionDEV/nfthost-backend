@@ -55,6 +55,10 @@ const WebsitesSchema = new Schema({
         addons: {
             type:Array,
             default: []
+        },
+        templates: {
+            type:Array,
+            default: ['Template1']
         }
     },
     meta: {
