@@ -8,7 +8,7 @@ const {
     UpdateWebsiteValidator,
     DeleteWebsiteValidator,
     UpdateExpirationValidator,
-    UpdateStyleValidator,
+    UpdateDataValidator,
     UpdateRevealDateValidator,
     UpdateCustomValidator,
     UpdateAnalyticsValidator,
@@ -29,7 +29,7 @@ router.get('/getMany', authenticateToken, GetWebsitesValidator, controller.getWe
 router.put('/update', authenticateToken, UpdateWebsiteValidator, controller.updateWebsite);
 router.delete('/delete', authenticateToken, DeleteWebsiteValidator, controller.deleteWebsite);
 router.patch('/updateExpiration', authenticateThirdPartyToken, UpdateExpirationValidator, controller.updateExpiration);
-router.patch('/updateStyle', authenticateToken, UpdateStyleValidator, controller.updateStyle);
+router.patch('/updateData', authenticateToken, UpdateDataValidator, controller.updateData);
 router.patch('/updateRevealDate', authenticateToken, UpdateRevealDateValidator, controller.updateRevealDate);
 router.patch('/updateCustom', authenticateToken, UpdateCustomValidator, controller.updateCustom);
 router.patch('/updateAnalytics', authenticateThirdPartyToken, UpdateAnalyticsValidator, controller.updateAnalytics);

@@ -208,7 +208,7 @@ exports.RenewTokenValidator = [
 
 ]
 
-exports.UpdateStyleValidator = [
+exports.UpdateDataValidator = [
 
     // websiteId Validator
     check('websiteId', 'websiteId is empty')

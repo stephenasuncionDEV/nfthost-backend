@@ -58,7 +58,7 @@ const WebsitesSchema = new Schema({
         },
         templates: {
             type:Array,
-            default: ['Template1']
+            default: []
         }
     },
     meta: {
