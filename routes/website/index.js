@@ -8,8 +8,7 @@ const {
     UpdateWebsiteValidator,
     DeleteWebsiteValidator,
     UpdateExpirationValidator,
-    UpdateTemplateValidator,
-    UpdateStyleValidator,
+    UpdateDataValidator,
     UpdateRevealDateValidator,
     UpdateCustomValidator,
     UpdateAnalyticsValidator,
@@ -19,7 +18,8 @@ const {
     RenewSubscriptionValidator,
     VerifyDomainValidator,
     GetWebsiteByDomainValidator,
-    UpdateExternalLinkValidator
+    UpdateExternalLinkValidator,
+    DeleteTemplateValidator
 } = require('#middlewares/validators.js');
 
 router.post('/create', authenticateThirdPartyToken, CreateWebsiteValidator, controller.createWebsite);
@@ -29,15 +29,17 @@ router.get('/getMany', authenticateToken, GetWebsitesValidator, controller.getWe
 router.put('/update', authenticateToken, UpdateWebsiteValidator, controller.updateWebsite);
 router.delete('/delete', authenticateToken, DeleteWebsiteValidator, controller.deleteWebsite);
 router.patch('/updateExpiration', authenticateThirdPartyToken, UpdateExpirationValidator, controller.updateExpiration);
-router.patch('/updateTemplate', authenticateToken, UpdateTemplateValidator, controller.updateTemplate);
-router.patch('/updateStyle', authenticateToken, UpdateStyleValidator, controller.updateStyle);
+router.patch('/updateData', authenticateToken, UpdateDataValidator, controller.updateData);
 router.patch('/updateRevealDate', authenticateToken, UpdateRevealDateValidator, controller.updateRevealDate);
 router.patch('/updateCustom', authenticateToken, UpdateCustomValidator, controller.updateCustom);
 router.patch('/updateAnalytics', authenticateThirdPartyToken, UpdateAnalyticsValidator, controller.updateAnalytics);
 router.patch('/updateComponents', authenticateToken, UpdateComponentsValidator, controller.updateComponents);
 router.patch('/updateSubscription', authenticateToken, UpdateSubscriptionValidator, controller.updateSubscription);
-router.delete('/deleteAddon', authenticateToken, DeleteAddonValidator, controller.deleteAddon);
 router.patch('/renewSubscription', authenticateToken, RenewSubscriptionValidator, controller.renewSubscription);
+router.patch('/updateTemplate', authenticateToken, DeleteTemplateValidator, controller.updateTemplate);
+router.patch('/updateAddon', authenticateToken, DeleteAddonValidator, controller.updateAddon);
+router.delete('/deleteTemplate', authenticateToken, DeleteTemplateValidator, controller.deleteTemplate);
+router.delete('/deleteAddon', authenticateToken, DeleteAddonValidator, controller.deleteAddon);
 router.post('/verifyDomain', authenticateToken, VerifyDomainValidator, controller.verifyDomain);
 router.patch('/updateExternalLink', authenticateToken, UpdateExternalLinkValidator, controller.updateExternalLink);
 

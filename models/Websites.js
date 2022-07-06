@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const WebsitesSchema = new Schema({
     data: {
         type:String,
-        default: 'eyJ0ZW1wbGF0ZSI6IlTHCzEiLCJzdHlsZSI6eyJiZ0NvbG9yIjoiIiwiYmdJbWFnxCwifX0='
+        default: ''
     },
     memberId: {
         type:Schema.ObjectId, 
@@ -53,6 +53,10 @@ const WebsitesSchema = new Schema({
             default: ''
         },
         addons: {
+            type:Array,
+            default: []
+        },
+        templates: {
             type:Array,
             default: []
         }

@@ -208,25 +208,14 @@ exports.RenewTokenValidator = [
 
 ]
 
-exports.UpdateTemplateValidator = [
+exports.UpdateDataValidator = [
 
     // websiteId Validator
     check('websiteId', 'websiteId is empty')
     .notEmpty(),
 
-    // template Validator
-    check('template', 'template is empty')
-    .notEmpty(),
-]
-
-exports.UpdateStyleValidator = [
-
-    // websiteId Validator
-    check('websiteId', 'websiteId is empty')
-    .notEmpty(),
-
-    // style Validator
-    check('style', 'style is empty')
+    // data Validator
+    check('data', 'data is empty')
     .notEmpty(),
 ]
 
@@ -298,6 +287,18 @@ exports.DeleteAddonValidator = [
 
     // addon Validator
     check('addon', 'addon is empty')
+    .notEmpty(),
+
+]
+
+exports.DeleteTemplateValidator = [
+
+    // websiteId Validator
+    check('websiteId', 'websiteId is empty')
+    .notEmpty(),
+
+    // template Validator
+    check('template', 'template is empty')
     .notEmpty(),
 
 ]
