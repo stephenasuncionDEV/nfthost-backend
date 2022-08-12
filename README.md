@@ -36,18 +36,11 @@ or
 https://hub.docker.com/repository/docker/stephenasuncion/nfthost-backend
 ```
 
+## Technologies
 
-## Environment Variables
+![Technologies](https://skillicons.dev/icons?i=nodejs,express,nextjs,vercel,mongodb,docker,sass,git&theme=light)
 
-| .env                    |
-| ----------------------- |
-| MONGODB_URI             |
-| ACCESS_TOKEN_SECRET     |
-| REFRESH_TOKEN_SECRET    |
-| THIRDPARTY_TOKEN_SECRET |
-| STRIPE_SECRET           |
-| DOCKER_HUB_ACCESS_TOKEN |
-| DOCKER_HUB_USERNAME     |
+Other: [Chakra UI](https://chakra-ui.com/), [Stripe](https://stripe.com/en-ca), [PostHog](https://posthog.com/), [GrapesJS](https://grapesjs.com/), [Web3](https://web3js.readthedocs.io/en/v1.7.5/), [Chart.js](https://www.chartjs.org/), [Ethers](https://docs.ethers.io/v5/), [JSZip](https://stuk.github.io/jszip/)
 
 ## Support
 
