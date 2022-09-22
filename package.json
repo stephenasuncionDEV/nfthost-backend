@@ -23,18 +23,18 @@
     "express": "^4.18.1",
     "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
-    "lzutf8": "^0.6.2",
-    "mongoose": "^6.4.1",
-    "stripe": "^9.11.0"
+    "lzutf8": "^0.6.3",
+    "mongoose": "^6.6.1",
+    "stripe": "^10.10.0"
   },
   "devDependencies": {
-    "dotenv": "^16.0.1",
-    "nodemon": "^2.0.18"
+    "dotenv": "^16.0.2",
+    "nodemon": "^2.0.20"
   },
   "imports": {
-    "#db/*": "./db/*",
-    "#middlewares/*": "./middlewares/*",
-    "#models/*": "./models/*",
-    "#routes/*": "./routes/*"
+    "#database/*": "./src/database/*",
+    "#middlewares/*": "./src/middlewares/*",
+    "#models/*": "./src/database/models/*",
+    "#routes/*": "./src/routes/*"
   }
 }
