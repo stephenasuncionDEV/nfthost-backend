@@ -1,7 +1,14 @@
 const router = require('express').Router();
-const controller = require('./controller');
 const { authenticateToken } = require('#middlewares/jwt.js');
+const {
+    getFeaturedWebsites,
+    addReferral
+} = require('./controller');
+const { 
+    AddReferralValidator
+} = require('#middlewares/validators.js');
 
-router.get('/getFeaturedWebsites', authenticateToken, controller.getFeaturedWebsites);
+router.get('/getFeaturedWebsites', authenticateToken, getFeaturedWebsites);
+router.post('/addReferral', authenticateToken, AddReferralValidator, addReferral);
 
 module.exports = router;

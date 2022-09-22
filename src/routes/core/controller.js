@@ -6,9 +6,6 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.getFeaturedWebsites = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
         const coreRes = await Core.findOne({ key: 'core' });
 
         const websiteIdArray = coreRes.featuredWebsites.map((websiteId) => {
@@ -22,6 +19,53 @@ exports.getFeaturedWebsites = async (req, res, next) => {
         })
 
         res.status(200).json(websiteRes);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.addReferral = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).errors;
+        if (errors.length > 0) throw new Error(errors[0].msg);
+
+        const { name } = req.body;
+
+        const nameTemp = name.trim().toLowerCase();
+
+        const core = await Core.findOne({ key: 'core' });
+
+        let newUser = core.referrals.find((user) => user.name === nameTemp);
+        if (!newUser) {
+            newUser = {
+                name: nameTemp,
+                value: 0
+            }
+        }
+
+        newUser.value += 1;  
+
+        let coreRes = await Core.findOneAndUpdate({ 
+            key: 'core',
+            'referrals.name': newUser.name
+        }, {
+            $set: {
+                'referrals.$.value': newUser.value
+            }
+        });
+
+        if (!coreRes) {
+            coreRes = await Core.findOneAndUpdate({ 
+                key: 'core'
+            }, {
+                $push: {
+                    'referrals': newUser
+                }
+            });
+        }
+
+        res.status(200).json({ message: 'Successfully added referral' });
 
     } catch (err) {
         next(err);

@@ -374,3 +374,10 @@ exports.UpdateExternalLinkValidator = [
     .notEmpty(),
 
 ]
+
+exports.AddReferralValidator = [
+
+    check('name', 'name is empty')
+    .notEmpty()
+
+]
