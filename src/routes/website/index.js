@@ -19,7 +19,8 @@ const {
     VerifyDomainValidator,
     GetWebsiteByDomainValidator,
     UpdateExternalLinkValidator,
-    DeleteTemplateValidator
+    DeleteTemplateValidator,
+    UpdateIsPublishedValidator
 } = require('#middlewares/validators.js');
 
 router.post('/create', authenticateThirdPartyToken, CreateWebsiteValidator, controller.createWebsite);
@@ -42,5 +43,6 @@ router.delete('/deleteTemplate', authenticateToken, DeleteTemplateValidator, con
 router.delete('/deleteAddon', authenticateToken, DeleteAddonValidator, controller.deleteAddon);
 router.post('/verifyDomain', authenticateToken, VerifyDomainValidator, controller.verifyDomain);
 router.patch('/updateExternalLink', authenticateToken, UpdateExternalLinkValidator, controller.updateExternalLink);
+router.patch('/updateIsPublished', authenticateToken, UpdateIsPublishedValidator, controller.updateIsPublished);
 
 module.exports = router;
