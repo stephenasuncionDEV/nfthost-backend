@@ -82,21 +82,20 @@ exports.PaymentRequestValidator = [
 
 exports.CreateWebsiteValidator = [
 
-    // components.title Validator
+    check('route', 'route is empty')
+    .notEmpty(),
+
     check('components.title', 'components.title is empty')
     .notEmpty(),
 
-    // components.unrevealedImage Validator
     check('components.unrevealedImage', 'components.unrevealedImage is empty')
     .notEmpty(),
 
-    // components.description Validator
     check('components.description', 'components.description is empty')
     .notEmpty(),
 
-    // components.embed Validator
     check('components.embed', 'components.embed is empty')
-    .notEmpty(),
+    .notEmpty()
 ];
 
 exports.GetWebsiteValidator = [
@@ -369,8 +368,8 @@ exports.UpdateExternalLinkValidator = [
     check('websiteId', 'websiteId is empty')
     .notEmpty(),
 
-    // external_links Validator
-    check('external_links', 'external_links is empty')
+    // externalLinks Validator
+    check('externalLinks', 'externalLinks is empty')
     .notEmpty(),
 
 ]
@@ -378,6 +377,16 @@ exports.UpdateExternalLinkValidator = [
 exports.AddReferralValidator = [
 
     check('name', 'name is empty')
+    .notEmpty()
+
+]
+
+exports.UpdateIsPublishedValidator = [
+
+    check('websiteId', 'websiteId is empty')
+    .notEmpty(),
+
+    check('isPublished', 'isPublished is empty')
     .notEmpty()
 
 ]
