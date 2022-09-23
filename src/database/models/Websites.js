@@ -4,128 +4,137 @@ const Schema = mongoose.Schema;
 
 const WebsitesSchema = new Schema({
     data: {
-        type:String,
+        type: String,
         default: ''
     },
     memberId: {
-        type:Schema.ObjectId, 
+        type: Schema.ObjectId, 
         default: null
     },
     isPremium: {
-        type:Boolean,
+        type: Boolean,
         default: false
     },
     isExpired: {
-        type:Boolean,
+        type: Boolean,
+        default: false
+    },
+    isPublished: {
+        type: Boolean,
         default: false
     },
     premiumStartDate: {
-        type:Date,
+        type: Date,
         default: null
     },
     revealDate: {
-        type:Date,
+        type: Date,
         default: null
+    },
+    route: {
+        type: String,
+        default: '',
+        required: true
     },
     components: {
         title: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         unrevealedImage: {
-            type:String,
+            type: String,
             default: 'https://www.nfthost.app/assets/logo.png',
             required: true
         },
         description: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         embed: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         script: {
-            type:String,
+            type: String,
             default: ''
         },
         addons: {
-            type:Array,
+            type: [String],
             default: []
         },
         templates: {
-            type:Array,
+            type: [String],
             default: []
         }
     },
     meta: {
         robot: {
-            type:String,
+            type: String,
             default: 'if'
         },
         favicon: {
-            type:String,
+            type: String,
             default: 'https://www.nfthost.app/favicon.ico'
         },
         language: {
-            type:String,
+            type: String,
             default: 'EN'
         }
     },
     analytics: {
         uniqueVisits : {
-            type:Number,
+            type: Number,
             default: 0
         },
         clickedOnEmbed : {
-            type:Number,
+            type: Number,
             default: 0
         },
         referrers : {
-            type:Array,
+            type: [String],
             default: []
         }
     },
-    external_links: {
+    externalLinks: {
         twitter: {
-            type:String,
+            type: String,
             default: ''
         },
         instagram: {
-            type:String,
+            type: String,
             default: ''
         },
         youtube: {
-            type:String,
+            type: String,
             default: ''
         },
         tiktok: {
-            type:String,
+            type: String,
             default: ''
         },
         discord: {
-            type:String,
+            type: String,
             default: ''
         },
         reddit: {
-            type:String,
+            type: String,
             default: ''
         },
         facebook: {
-            type:String,
+            type: String,
             default: ''
         }
     },
     custom: {
         domain: {
-            type:String,
+            type: String,
             default: ''
         },
         alias: {
-            type:String,
+            type: String,
             default: ''
         }
     },
