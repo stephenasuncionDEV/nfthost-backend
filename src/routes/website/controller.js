@@ -9,8 +9,24 @@ exports.createWebsite = async (req, res, next) => {
         const errors = validationResult(req).errors;
         if (errors.length > 0) throw new Error(errors[0].msg);
 
-        const website = new Website({...req.body});
-        const result = await website.save({ ordered: false });
+        const { memberId, components, meta, route } = req.body;
+
+        const count = await Website.estimatedDocumentCount({ route });
+
+        if (count > 0) throw new Error('Subdomain already exists');
+
+        let newWebsite = {
+            route,
+            components,
+            meta
+        }
+
+        if (memberId) {
+            newWebsite.memberId = memberId;
+        }
+
+        const website = new Website(newWebsite);
+        const result = await website.save();
 
         res.status(200).json(result);
 
@@ -428,15 +444,37 @@ exports.updateExternalLink = async (req, res, next) => {
         const errors = validationResult(req).errors;
         if (errors.length > 0) throw new Error(errors[0].msg);
 
-        const { websiteId, external_links } = req.body;
+        const { websiteId, externalLinks } = req.body;
 
         await Website.updateOne({ _id: websiteId }, {
             $set: { 
-                external_links
+                externalLinks
             }
         });
 
         res.sendStatus(200);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateIsPublished = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).errors;
+        if (errors.length > 0) throw new Error(errors[0].msg);
+
+        const { websiteId, isPublished } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: { 
+                isPublished
+            }
+        }, {
+            new: true
+        });
+
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
