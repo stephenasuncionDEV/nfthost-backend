@@ -32,19 +32,6 @@ exports.RequestPaymentValidator = [
 
 ];
 
-exports.RequestPaymentValidator = [
-
-    check('email', 'email is empty')
-    .notEmpty(),
-    
-    check('amount', 'amount is empty')
-    .notEmpty(),
-
-    check('customerId', 'customerId is empty')
-    .notEmpty(),
-
-];
-
 exports.AddPaymentValidator = [
 
     check('memberId', 'memberId is empty')
