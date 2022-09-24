@@ -1,27 +1,97 @@
 const { validationResult } = require('express-validator');
 const { Payment } = require('#models/Payments.js');
+const config = require('#config/index.js')
 const Stripe = require('stripe');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
-// Request a payment
+exports.requestSubscription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { service, billingDetails, customerId, metadata } = req.body;
+        
+        let customer = await stripe.customers.retrieve(customerId);
+        if (!customer) {
+            customer = await stripe.customers.create({
+                name: billingDetails.name,
+                email: billingDetails.email,
+                address: billingDetails.address,
+                metadata
+            });
+        }
+
+        const product = {
+            generator: {
+                id: 'price_1LlUUMHjrZpuqKHtI8T2eCPj',
+                price: 25 * 100
+            },
+            utilities: {
+                id: 'price_1LlUW1HjrZpuqKHtbRc8RIyE',
+                price: 5 * 100
+            },
+            website: {
+                id: 'price_1LlUVaHjrZpuqKHtyWSqAG9Z',
+                price: 15 * 100
+            }
+        }[service];
+
+        const price = await stripe.prices.create({
+            currency: 'usd',
+            unit_amount: product.price,
+            product: product.id,
+        });
+
+        const subscription = await stripe.subscriptions.create({
+            customer: customerId,
+            items: [{
+                price: price.id,
+            }],
+            payment_behavior: 'default_incomplete',
+            payment_settings: { 
+                save_default_payment_method: 'on_subscription' 
+            },
+            expand: ['latest_invoice.payment_intent'],
+        });
+
+        res.status(200).json({
+            subscriptionId: subscription.id,
+            clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+        });
+
+    } catch (err) {
+        next(err);
+    }
+}
+
 exports.requestPayment = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { email, amount } = req.body;
+        const { billingDetails, amount, customerId, metadata } = req.body;
         
+        let customer = await stripe.customers.retrieve(customerId);
+        if (!customer) {
+            customer = await stripe.customers.create({
+                name: billingDetails.name,
+                email: billingDetails.email,
+                address: billingDetails.address,
+                metadata
+            });
+        }
+
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount * 100,
             currency: 'usd',
-            metadata: {
-                integration_check: 'accept_a_payment'
-            },
-            receipt_email: email
+            receipt_email: billingDetails.email,
+            customer: customer.id
         })
 
-        res.status(200).send({ secret: paymentIntent.client_secret });
+        res.status(200).json({ 
+            clientSecret: paymentIntent.client_secret 
+        });
 
     } catch (err) {
         next(err);
@@ -30,14 +100,23 @@ exports.requestPayment = async (req, res, next) => {
 
 exports.addPayment = async (req, res, next) => {
     try {   
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const payment = new Payment({...req.body});
+        const { memberId, hash, service, price } = req.body;
+
+        const newPayment = {
+            memberId,
+            hash,
+            service,
+            price
+        }
+
+        const payment = new Payment(newPayment);
         
         const result = await payment.save({ ordered: false });
 
-        res.status(200).send(result);
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
@@ -46,8 +125,8 @@ exports.addPayment = async (req, res, next) => {
 
 exports.getPayments = async (req, res, next) => {
     try {   
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { memberId, pageNumber } = req.query;    
 
@@ -67,7 +146,7 @@ exports.getPayments = async (req, res, next) => {
             currentPage: page
         }
 
-        res.status(200).send(data);
+        res.status(200).json(data);
 
     } catch (err) {
         next(err);
