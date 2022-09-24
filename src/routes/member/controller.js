@@ -64,104 +64,66 @@ exports.getMemberByAddress = async (req, res, next) => {
     }
 }
 
-exports.addCount = async (req, res, next) => {
+exports.addUnit = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { address, service, value } = req.body;
+        const { address, service } = req.body;
 
-        const child = {
-            generator: 'generationCount',
-            website: 'websiteCount'
-        }[service];
-
-        await Member.updateOne({ address }, {
+        const result = await Member.findOneAndUpdate({ address }, {
             $inc: { 
-                [`services.${service}.${child}`]: value
+                [`services.${service}.units`]: 1
             }
+        }, {
+            new: true
         });
 
-        res.status(200).json({message: "Succesfully added generation count to user"});
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
     }
 }
 
-exports.addFree = async (req, res, next) => {
+exports.deductUnit = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { address, service, value } = req.body;
+        const { address, service } = req.body;
 
-        const child = {
-            generator: 'freeGeneration',
-            website: 'freeWebsite',
-            utils: 'freeUtil'
-        }[service];
-
-        await Member.updateOne({ address }, 
-            {
-                $inc: { 
-                    [`services.${service}.${child}`]: value
-                }
+        const result = await Member.findOneAndUpdate({ address }, {
+            $inc: { 
+                [`services.${service}.units`]: -1
             }
-        );
+        }, {
+            new: true
+        });
 
-        res.status(200).json({message: "Succesfully added points to user"});
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
     }
 }
 
-exports.deductCount = async (req, res, next) => {
+exports.updateIsSubscribed = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { address, service, value } = req.body;
+        const { address, service, isSubscribed } = req.body;
 
-        const child = {
-            generator: 'generationCount',
-            website: 'websiteCount'
-        }[service];
-
-        await Member.updateOne({ address }, {
-            $inc: { 
-                [`services.${service}.${child}`]: value * -1
+        const result = await Member.findOneAndUpdate({ address }, {
+            $set: { 
+                [`services.${service}.isSubscribed`]: isSubscribed
             }
+        }, {
+            new: true
         });
 
-        res.status(200).json({message: "Succesfully deducted points from user"});
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.deductFree = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).array();
-        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
-
-        const { address, service, value } = req.body;
-
-        const child = {
-            generator: 'freeGeneration',
-            website: 'freeWebsite',
-            utils: 'freeUtil'
-        }[service];
-
-        await Member.updateOne({ address }, {
-            $inc: { 
-                [`services.${service}.${child}`]: value * -1
-            }
-        });
-
-        res.status(200).json({message: "Succesfully deducted points from user"});
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
@@ -175,10 +137,12 @@ exports.updateEmail = async (req, res, next) => {
 
         const { memberId, email } = req.body;
 
-        const result = await Member.updateOne({ _id: memberId }, {
+        const result = await Member.findOneAndUpdate({ _id: memberId }, {
             $set: { 
                 email
             }
+        }, {
+            new: true
         });
 
         res.status(200).json(result);

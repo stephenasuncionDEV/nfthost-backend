@@ -17,55 +17,36 @@ exports.GetMemberByAddressValidator = [
     
 ];
 
-exports.AddCountValidator = [
+exports.AddUnitValidator = [
 
     check('address', 'address is empty')
     .notEmpty(),
 
     check('service', 'service is empty')
-    .notEmpty(),
-    
-    check('value', 'value is empty')
-    .notEmpty(),
+    .notEmpty()
 
 ];
 
-exports.AddFreeValidator = [
+exports.DeductUnitValidator = [
 
     check('address', 'address is empty')
     .notEmpty(),
 
     check('service', 'service is empty')
-    .notEmpty(),
-    
-    check('value', 'value is empty')
-    .notEmpty(),
+    .notEmpty()
 
 ];
 
-exports.DeductFreeValidator = [
+exports.UpdateIsSubscribedValidator = [
 
     check('address', 'address is empty')
     .notEmpty(),
 
     check('service', 'service is empty')
     .notEmpty(),
-    
-    check('value', 'value is empty')
-    .notEmpty(),
 
-];
-
-exports.DeductCountValidator = [
-
-    check('address', 'address is empty')
-    .notEmpty(),
-
-    check('service', 'service is empty')
-    .notEmpty(),
-    
-    check('value', 'value is empty')
-    .notEmpty(),
+    check('isSubscribed', 'isSubscribed is empty')
+    .notEmpty()
 
 ];
 

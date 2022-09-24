@@ -30,27 +30,23 @@ const MembersSchema = new Schema({
     },
     services: {
         generator: {
-            generationCount: {
-                type: Number,
-                default: 0
-            },
-            freeGeneration: {
+            units: {
                 type: Number,
                 default: 0
             },
         },
         website: {
-            websiteCount: {
+            units: {
                 type: Number,
                 default: 0
             },
-            freeWebsite: {
-                type: Number,
-                default: 0
+            isSubscribed: {
+                type: Boolean,
+                default: false
             }
         },
         utils: {
-            freeUtil: {
+            units: {
                 type: Number,
                 default: 0
             }
