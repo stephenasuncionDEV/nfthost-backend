@@ -1,12 +1,10 @@
-const { check } = require("express-validator");
+const { check } = require('express-validator');
 
 exports.WalletLoginValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
 
-    // Wallet Validator
     check('wallet', 'wallet is empty')
     .notEmpty(),
     
@@ -14,7 +12,6 @@ exports.WalletLoginValidator = [
 
 exports.GetMemberByAddressValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
     
@@ -22,15 +19,12 @@ exports.GetMemberByAddressValidator = [
 
 exports.AddCountValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
 
-    // Service Validator
     check('service', 'service is empty')
     .notEmpty(),
     
-    // Value Validator
     check('value', 'value is empty')
     .notEmpty(),
 
@@ -38,15 +32,12 @@ exports.AddCountValidator = [
 
 exports.AddFreeValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
 
-    // Service Validator
     check('service', 'service is empty')
     .notEmpty(),
     
-    // Value Validator
     check('value', 'value is empty')
     .notEmpty(),
 
@@ -54,15 +45,12 @@ exports.AddFreeValidator = [
 
 exports.DeductFreeValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
 
-    // Service Validator
     check('service', 'service is empty')
     .notEmpty(),
     
-    // Value Validator
     check('value', 'value is empty')
     .notEmpty(),
 
@@ -70,27 +58,22 @@ exports.DeductFreeValidator = [
 
 exports.DeductCountValidator = [
 
-    // Address Validator
     check('address', 'address is empty')
     .notEmpty(),
 
-    // Service Validator
     check('service', 'service is empty')
     .notEmpty(),
     
-    // Value Validator
     check('value', 'value is empty')
     .notEmpty(),
 
-]
+];
 
 exports.UpdateEmailValidator = [
 
-    // websiteId Validator
     check('memberId', 'memberId is empty')
     .notEmpty(),
 
-    // email Validator
     check('email', 'email is empty')
     .notEmpty(),
 
@@ -100,7 +83,6 @@ exports.UpdateEmailValidator = [
 
 exports.LogoutValidator = [
 
-    // refreshToken Validator
     check('refreshToken', 'refreshToken is empty')
     .notEmpty(),
 
@@ -108,15 +90,7 @@ exports.LogoutValidator = [
 
 exports.RenewTokenValidator = [
 
-    // refreshToken Validator
     check('refreshToken', 'refreshToken is empty')
     .notEmpty(),
-
-]
-
-exports.AddReferralValidator = [
-
-    check('name', 'name is empty')
-    .notEmpty()
 
 ]

@@ -10,7 +10,7 @@ const {
     UpdateEmailValidator,
     LogoutValidator,
     RenewTokenValidator
-} = require('#middlewares/validators.js');
+} = require('./validators');
 const { authenticateToken } = require('#middlewares/jwt.js');
 
 router.post('/walletLogin', WalletLoginValidator, controller.walletLogin);
