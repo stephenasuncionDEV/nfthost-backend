@@ -6,21 +6,22 @@ const jwt = require('jsonwebtoken');
 
 exports.walletLogin = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address, wallet } = req.body;
 
-        const userCount = await Member.count({ address })
+        const userCount = await Member.count({ address });
 
-        const newMember = {
+        let newMember = {
             address,
             wallet
         }
-        
-        const member = new Member(newMember);
 
-        if (!userCount) await member.save({ ordered: false });
+        if (!userCount) {
+            const member = new Member(newMember);
+            await member.save();
+        }
 
         const memberData = { address, wallet };
         const accessToken = generateAccessToken(memberData);
@@ -33,7 +34,7 @@ exports.walletLogin = async (req, res, next) => {
             refreshToken
         });
 
-        if (!tokenCount) await newToken.save({ ordered: false });
+        if (!tokenCount) await newToken.save();
         else await Token.updateOne({ address }, {
             $set: {
                 refreshToken
@@ -49,8 +50,8 @@ exports.walletLogin = async (req, res, next) => {
 
 exports.getMemberByAddress = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address } = req.query;
 
@@ -65,8 +66,8 @@ exports.getMemberByAddress = async (req, res, next) => {
 
 exports.addCount = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address, service, value } = req.body;
 
@@ -90,8 +91,8 @@ exports.addCount = async (req, res, next) => {
 
 exports.addFree = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address, service, value } = req.body;
 
@@ -118,8 +119,8 @@ exports.addFree = async (req, res, next) => {
 
 exports.deductCount = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address, service, value } = req.body;
 
@@ -143,8 +144,8 @@ exports.deductCount = async (req, res, next) => {
 
 exports.deductFree = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { address, service, value } = req.body;
 
@@ -169,8 +170,8 @@ exports.deductFree = async (req, res, next) => {
 
 exports.updateEmail = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { memberId, email } = req.body;
 
@@ -189,8 +190,8 @@ exports.updateEmail = async (req, res, next) => {
 
 exports.logout = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { refreshToken } = req.body;
 
@@ -205,8 +206,8 @@ exports.logout = async (req, res, next) => {
 
 exports.renewToken = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { refreshToken } = req.body;
 
