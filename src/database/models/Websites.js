@@ -3,10 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const WebsitesSchema = new Schema({
-    data: {
-        type: String,
-        default: ''
-    },
     memberId: {
         type: Schema.ObjectId, 
         default: null
@@ -65,9 +61,9 @@ const WebsitesSchema = new Schema({
             type: [String],
             default: []
         },
-        templates: {
-            type: [String],
-            default: []
+        template: {
+            type: String,
+            default: 'Template1'
         }
     },
     meta: {
@@ -82,20 +78,6 @@ const WebsitesSchema = new Schema({
         language: {
             type: String,
             default: 'EN'
-        }
-    },
-    analytics: {
-        uniqueVisits : {
-            type: Number,
-            default: 0
-        },
-        clickedOnEmbed : {
-            type: Number,
-            default: 0
-        },
-        referrers : {
-            type: [String],
-            default: []
         }
     },
     externalLinks: {
@@ -130,10 +112,6 @@ const WebsitesSchema = new Schema({
     },
     custom: {
         domain: {
-            type: String,
-            default: ''
-        },
-        alias: {
             type: String,
             default: ''
         }
