@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const { Payment } = require('#models/Payments.js');
+const { Member } = require('#models/Members.js');
 const config = require('#config/index.js')
 const Stripe = require('stripe');
 
@@ -12,13 +13,22 @@ exports.requestSubscription = async (req, res, next) => {
 
         const { service, billingDetails, customerId, metadata } = req.body;
         
-        let customer = await stripe.customers.retrieve(customerId);
-        if (!customer) {
+        let customer;
+        if (customerId !== 'none') {
+            customer = await stripe.customers.retrieve(customerId);
+        }
+        else if (customerId === 'none') {
             customer = await stripe.customers.create({
                 name: billingDetails.name,
                 email: billingDetails.email,
                 address: billingDetails.address,
                 metadata
+            });
+
+            await Member.findOneAndUpdate({ address: metadata.walletAddress }, {
+                $set: {
+                    customerId: customer.id
+                }
             });
         }
 
@@ -44,7 +54,7 @@ exports.requestSubscription = async (req, res, next) => {
         });
 
         const subscription = await stripe.subscriptions.create({
-            customer: customerId,
+            customer: customer.id,
             items: [{
                 price: price.id,
             }],
@@ -72,13 +82,22 @@ exports.requestPayment = async (req, res, next) => {
 
         const { billingDetails, amount, customerId, metadata } = req.body;
         
-        let customer = await stripe.customers.retrieve(customerId);
-        if (!customer) {
+        let customer;
+        if (customerId !== 'none') {
+            customer = await stripe.customers.retrieve(customerId);
+        }
+        else if (customerId === 'none') {
             customer = await stripe.customers.create({
                 name: billingDetails.name,
                 email: billingDetails.email,
                 address: billingDetails.address,
                 metadata
+            });
+
+            await Member.findOneAndUpdate({ address: metadata.walletAddress }, {
+                $set: {
+                    customerId: customer.id
+                }
             });
         }
 
