@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const controller = require('./controller');
-const { authenticateToken } = require('#middlewares/jwt.js');
 const { 
     RequestSubscriptionValidator,
     RequestPaymentValidator,
     AddPaymentValidator, 
     GetPaymentsValidator 
 } = require('./validators.js');
+const { authenticateToken } = require('#middlewares/jwt.js');
 
 router.post('/requestSubscription', authenticateToken, RequestSubscriptionValidator, controller.requestSubscription);
 router.post('/request', authenticateToken, RequestPaymentValidator, controller.requestPayment);

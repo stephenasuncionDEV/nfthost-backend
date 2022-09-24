@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const controller = require('./controller');
-const { authenticateToken, authenticateThirdPartyToken } = require('#middlewares/jwt.js');
 const {
     CreateWebsiteValidator,
     DeleteWebsiteValidator,
@@ -29,6 +28,10 @@ const {
     UpdateDomainValidator,
     VerifyDomainValidator
 } = require('./validators');
+const { 
+    authenticateToken, 
+    authenticateThirdPartyToken 
+} = require('#middlewares/jwt.js');
 
 router.post('/create', authenticateThirdPartyToken, CreateWebsiteValidator, controller.createWebsite);
 router.delete('/delete', authenticateToken, DeleteWebsiteValidator, controller.deleteWebsite);
