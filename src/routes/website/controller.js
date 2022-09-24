@@ -1,17 +1,17 @@
 const { validationResult } = require('express-validator');
 const { Website } = require('#models/Websites.js');
-const { ParseWebsiteData, EncodeWebsiteData, VerifyDns } = require('#middlewares/tools.js');
+const { VerifyDns } = require('#middlewares/tools.js');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createWebsite = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { memberId, components, meta, route } = req.body;
 
-        const count = await Website.estimatedDocumentCount({ route });
+        const count = await Website.count({ route });
 
         if (count > 0) throw new Error('Subdomain already exists');
 
@@ -35,54 +35,44 @@ exports.createWebsite = async (req, res, next) => {
     }
 }
 
-exports.getWebsite = async (req, res, next) => {
+exports.deleteWebsite = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-        
-        const { websiteId } = req.query;
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        let count = 0;
-        
-        // Check if websiteId is an actual object id
-        if (ObjectId.isValid(websiteId)) {
-            count = await Website.count({ _id: websiteId });
-            if (count > 0) {
-                const result = await Website.findOne({ _id: websiteId });
-                res.status(200).json(result);
-                return;
-            }
-        }
+        const { websiteId } = req.body;
 
-        const tempId = websiteId.toLowerCase();
-        const expression = { $regex: new RegExp('^' + tempId + '$', 'i') };
+        const result = await Website.deleteOne({ _id: websiteId });
 
-        // // Check if websiteId is a custom domain
-        // count = await Website.count({ [`custom.domain`]: expression });
-        // if (count > 0) {
-        //     const result = await Website.findOne({ [`custom.domain`]: expression });
-        //     res.status(200).json(result);
-        //     return;
-        // }
-
-        // Check if websiteId is a custom alias
-        count = await Website.count({ [`custom.alias`]: expression });
-        if (count > 0) {
-            const result = await Website.findOne({ [`custom.alias`]: expression });
-            res.status(200).json(result);
-            return;
-        }
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
     }
 }
 
-//@Todo
+exports.getWebsiteByRoute = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+        
+        const { route } = req.query;
+
+        const result = await Website.findOne({ route });
+
+        if (!result) throw new Error('Minting website not found');
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
 exports.getWebsiteByDomain = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
         
         const { domain } = req.query;
 
@@ -124,8 +114,8 @@ exports.getWebsiteByDomain = async (req, res, next) => {
 
 exports.getWebsites = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { memberId } = req.query;
 
@@ -138,299 +128,20 @@ exports.getWebsites = async (req, res, next) => {
     }
 }
 
-exports.updateWebsite = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, ...websiteData} = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            ...websiteData
-        })
-
-        res.status(200).json({
-            _id: websiteId,
-            ...websiteData
-        });
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.deleteWebsite = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId } = req.body;
-
-        const result = await Website.deleteOne({ _id: websiteId });
-
-        res.status(200).json(result);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateExpiration = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, isExpired } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                isExpired
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
 exports.updateData = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { websiteId, data } = req.body;
 
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
                 data
             }
-        });
-
-        res.status(200).json({ data });
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateRevealDate = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, revealDate } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                revealDate
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateCustom = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, key, value } = req.body;
-
-        const tempValue = value.toLowerCase();
-
-        const resultCount = await Website.count({ [`custom.${key}`]: tempValue });
-
-        if (resultCount > 0) throw new Error('Alias already in used');
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                [`custom.${key}`]: tempValue
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateAnalytics = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, key, value } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                [`analytics.${key}`]: value
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateComponents = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, key, value } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                [`components.${key}`]: value
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateTemplate = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, template } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $push: { 
-                ['components.templates']: template
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateAddon = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, addon } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $push: { 
-                ['components.addons']: addon
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.deleteTemplate = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, template } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $pull: { 
-                ['components.templates']: template
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.deleteAddon = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, addon } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $pull: { 
-                ['components.addons']: addon
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.updateSubscription = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, isPremium, premiumStartDate } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                isPremium,
-                premiumStartDate
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.renewSubscription = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { websiteId, isExpired, premiumStartDate } = req.body;
-
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                isExpired,
-                premiumStartDate
-            }
-        });
-
-        res.sendStatus(200);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
-exports.verifyDomain = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
-
-        const { domain } = req.body;
-
-        const result = await VerifyDns(domain);
+        }, {
+            new: true
+        })
 
         res.status(200).json(result);
 
@@ -439,20 +150,44 @@ exports.verifyDomain = async (req, res, next) => {
     }
 }
 
-exports.updateExternalLink = async (req, res, next) => {
+exports.updateIsPremium = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { websiteId, externalLinks } = req.body;
+        const { websiteId, isPremium } = req.body;
 
-        await Website.updateOne({ _id: websiteId }, {
-            $set: { 
-                externalLinks
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                isPremium
             }
-        });
+        }, {
+            new: true
+        })
 
-        res.sendStatus(200);
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateIsExpired = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, isExpired } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                isExpired
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);
@@ -461,18 +196,390 @@ exports.updateExternalLink = async (req, res, next) => {
 
 exports.updateIsPublished = async (req, res, next) => {
     try {
-        const errors = validationResult(req).errors;
-        if (errors.length > 0) throw new Error(errors[0].msg);
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
         const { websiteId, isPublished } = req.body;
 
         const result = await Website.findOneAndUpdate({ _id: websiteId }, {
-            $set: { 
+            $set: {
                 isPublished
             }
         }, {
             new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updatePremiumStartDate = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, premiumStartDate } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                premiumStartDate
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateRevealDate = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, revealDate } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                revealDate
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateRoute = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, route } = req.body;
+
+        const count = await Website.count({ route });
+
+        if (count > 0) throw new Error('Subdomain already exists');
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                route
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateTitle = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, title } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'components.title': title
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateDescription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, description } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'components.description': description
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateLogo = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, logo } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'components.unrevealedImage': logo
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateScript = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, script } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'components.script': script
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateEmbed = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, embed } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'components.embed': embed
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.addAddon = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, addon } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $push: { 
+                'components.addons': addon
+            }
+        }, {
+            new: true
         });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.deleteAddon = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, addon } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $pull: { 
+                'components.addons': addon
+            }
+        }, {
+            new: true
+        });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateTemplate = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, template } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: { 
+                'components.template': template
+            }
+        }, {
+            new: true
+        });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateRobot = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, robot } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'meta.robot': robot
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateFavicon = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, favicon } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'meta.favicon': favicon
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateLanguage = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, language } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'meta.language': language
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateExternalLinks = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, externalLinks } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: { 
+                externalLinks
+            }
+        }, {
+            new: true
+        });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateDomain = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, domain } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                'custom.domain': domain
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.verifyDomain = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { domain } = req.body;
+
+        const result = await VerifyDns(domain);
 
         res.status(200).json(result);
 
