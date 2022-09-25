@@ -23,6 +23,10 @@ const WebsitesSchema = new Schema({
         type: Date,
         default: null
     },
+    premiumEndDate: {
+        type: Date,
+        default: null
+    },
     revealDate: {
         type: Date,
         default: null
@@ -31,6 +35,10 @@ const WebsitesSchema = new Schema({
         type: String,
         default: '',
         required: true
+    },
+    subscriptionId: {
+        type: String,
+        default: '',
     },
     components: {
         title: {

@@ -39,10 +39,6 @@ const MembersSchema = new Schema({
             units: {
                 type: Number,
                 default: 0
-            },
-            isSubscribed: {
-                type: Boolean,
-                default: false
             }
         },
         utils: {
