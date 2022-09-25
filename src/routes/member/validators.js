@@ -37,19 +37,6 @@ exports.DeductUnitValidator = [
 
 ];
 
-exports.UpdateIsSubscribedValidator = [
-
-    check('address', 'address is empty')
-    .notEmpty(),
-
-    check('service', 'service is empty')
-    .notEmpty(),
-
-    check('isSubscribed', 'isSubscribed is empty')
-    .notEmpty()
-
-];
-
 exports.UpdateEmailValidator = [
 
     check('memberId', 'memberId is empty')

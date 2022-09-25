@@ -57,3 +57,24 @@ exports.GetPaymentsValidator = [
     .notEmpty(),
 
 ]
+
+exports.CancelSubscriptionValidator = [
+
+    check('subscriptionId', 'subscriptionId is empty')
+    .notEmpty()
+
+]
+
+exports.GetSubscriptionsValidator = [
+
+    check('customerId', 'customerId is empty')
+    .notEmpty()
+
+]
+
+exports.GetSubscriptionValidator = [
+
+    check('subscriptionId', 'subscriptionId is empty')
+    .notEmpty()
+
+]

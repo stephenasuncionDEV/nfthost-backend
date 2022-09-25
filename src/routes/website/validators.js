@@ -262,3 +262,25 @@ exports.VerifyDomainValidator = [
     .notEmpty()
     
 ]
+
+exports.UpdateSubscriptionValidator = [
+
+    check('memberId', 'memberId is empty')
+    .notEmpty(),
+
+    check('subscriptionId', 'subscriptionId is empty')
+    .notEmpty(),
+
+    check('isPremium', 'isPremium is empty')
+    .notEmpty(),
+
+    check('isExpired', 'isExpired is empty')
+    .notEmpty(),
+
+    check('isPublished', 'isPublished is empty')
+    .notEmpty(),
+
+    check('premiumStartDate', 'premiumStartDate is empty')
+    .notEmpty()
+
+]
