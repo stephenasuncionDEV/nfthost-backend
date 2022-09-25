@@ -26,7 +26,8 @@ const {
     UpdateLanguageValidator,
     UpdateExternalLinksValidator,
     UpdateDomainValidator,
-    VerifyDomainValidator
+    VerifyDomainValidator,
+    UpdateSubscriptionValidator
 } = require('./validators');
 const { 
     authenticateToken, 
@@ -59,5 +60,6 @@ router.patch('/updateLanguage', authenticateToken, UpdateLanguageValidator, cont
 router.patch('/updateExternalLinks', authenticateToken, UpdateExternalLinksValidator, controller.updateExternalLinks);
 router.patch('/updateDomain', authenticateToken, UpdateDomainValidator, controller.updateDomain);
 router.patch('/verifyDomain', authenticateToken, VerifyDomainValidator, controller.verifyDomain);
+router.patch('/updateSubscription', authenticateToken, UpdateSubscriptionValidator, controller.updateSubscription);
 
 module.exports = router;
