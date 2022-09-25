@@ -32,31 +32,10 @@ exports.requestSubscription = async (req, res, next) => {
             });
         }
 
-        const product = {
-            generator: {
-                id: 'price_1LlUUMHjrZpuqKHtI8T2eCPj',
-                price: 25 * 100
-            },
-            utilities: {
-                id: 'price_1LlUW1HjrZpuqKHtbRc8RIyE',
-                price: 5 * 100
-            },
-            website: {
-                id: 'price_1LlUVaHjrZpuqKHtyWSqAG9Z',
-                price: 15 * 100
-            }
-        }[service];
-
-        const price = await stripe.prices.create({
-            currency: 'usd',
-            unit_amount: product.price,
-            product: product.id,
-        });
-
         const subscription = await stripe.subscriptions.create({
             customer: customer.id,
             items: [{
-                price: price.id,
+                price: config.stripe.products[service].priceId,
             }],
             payment_behavior: 'default_incomplete',
             payment_settings: { 
@@ -166,6 +145,60 @@ exports.getPayments = async (req, res, next) => {
         }
 
         res.status(200).json(data);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.getSubscriptions = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { customerId } = req.query;
+
+        const customer = await stripe.customers.retrieve(customerId, {
+            expand: ['subscriptions']
+        });
+
+        const subscriptions = customer.subscriptions.data;
+
+        res.status(200).json(subscriptions.filter((sub) => sub.cancel_at_period_end === false));
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+exports.cancelSubscription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { subscriptionId } = req.body;
+        
+        const result = await stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: true
+        });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.getSubscription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { subscriptionId } = req.query;
+        
+        const result = await stripe.subscriptions.retrieve(subscriptionId);
+
+        res.status(200).json(result);
 
     } catch (err) {
         next(err);

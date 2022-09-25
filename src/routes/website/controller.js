@@ -1,8 +1,7 @@
 const { validationResult } = require('express-validator');
 const { Website } = require('#models/Websites.js');
+const { Member } = require('#models/Members.js');
 const { VerifyDns } = require('#middlewares/tools.js');
-
-const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createWebsite = async (req, res, next) => {
     try {
@@ -23,6 +22,14 @@ exports.createWebsite = async (req, res, next) => {
 
         if (memberId) {
             newWebsite.memberId = memberId;
+            const user = await Member.findOne({ _id: memberId });
+            if (user.services.website.units === 1) {
+                const webArr = await Website.find({ memberId });
+
+                newWebsite.isPremium = true;
+                newWebsite.subscriptionId = webArr[0].subscriptionId;
+                newWebsite.premiumStartDate = webArr[0].premiumStartDate;
+            }
         }
 
         const website = new Website(newWebsite);
@@ -160,6 +167,29 @@ exports.updateIsPremium = async (req, res, next) => {
         const result = await Website.findOneAndUpdate({ _id: websiteId }, {
             $set: {
                 isPremium
+            }
+        }, {
+            new: true
+        })
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateSubscription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { websiteId, isPremium, premiumStartDate } = req.body;
+
+        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
+            $set: {
+                isPremium,
+                premiumStartDate
             }
         }, {
             new: true
@@ -582,6 +612,56 @@ exports.verifyDomain = async (req, res, next) => {
         const result = await VerifyDns(domain);
 
         res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.updateSubscription = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { 
+            memberId, 
+            subscriptionId, 
+            isPremium, 
+            isExpired, 
+            premiumStartDate,
+            premiumEndDate,
+            isPublished
+        } = req.body;
+
+        let userWebsites = await Website.find({ memberId });
+        const userWebsitesIdArr = userWebsites.map((web) => web._id);
+
+        await Website.updateMany({ 
+            _id: {
+                $in: userWebsitesIdArr
+            }
+        }, {
+            $set: {
+                subscriptionId,
+                isPremium,
+                isExpired,
+                isPublished,
+                premiumStartDate,
+                premiumEndDate: premiumEndDate
+            }
+        });
+
+        if (isExpired) {
+            await Member.findOneAndUpdate({ _id: memberId }, {
+                $set: {
+                    'services.website.units': 0
+                }
+            })
+        }
+
+        userWebsites = await Website.find({ memberId });
+
+        res.status(200).json(userWebsites);
 
     } catch (err) {
         next(err);

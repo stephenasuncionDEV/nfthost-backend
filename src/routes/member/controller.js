@@ -108,28 +108,6 @@ exports.deductUnit = async (req, res, next) => {
     }
 }
 
-exports.updateIsSubscribed = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).array();
-        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
-
-        const { address, service, isSubscribed } = req.body;
-
-        const result = await Member.findOneAndUpdate({ address }, {
-            $set: { 
-                [`services.${service}.isSubscribed`]: isSubscribed
-            }
-        }, {
-            new: true
-        });
-
-        res.status(200).json(result);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
 exports.updateEmail = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
