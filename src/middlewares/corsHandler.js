@@ -3,7 +3,7 @@ const contructCors = (corsOption) => {
         const origin = req.headers.origin;
         const optOrigin = corsOption.origin;
 
-        if(optOrigin.includes(origin)) {
+        if(optOrigin.includes(origin) || optOrigin.includes('.nfthost.app')) {
             res.header('Access-Control-Allow-Origin', origin);
         }       
     
