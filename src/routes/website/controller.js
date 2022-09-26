@@ -674,3 +674,20 @@ exports.updateSubscription = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.getWebsitesWithSubdomain = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+        
+        const result = await Website.find({ route: {
+            $exists: true,
+            $ne: ''
+        } });
+
+        res.status(200).json(result);
+
+    } catch (err) {
+        next(err);
+    }
+}
