@@ -4,49 +4,45 @@ const Schema = mongoose.Schema;
 
 const MembersSchema = new Schema({
     address: {
-        type:String, 
-        required:true,
-        unique:true
+        type: String, 
+        required: true,
+        unique: true
     },
     wallet: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
     email: {
-        type:String,
+        type: String,
         default: ''
     },
     picture: {
-        type:String, 
+        type: String, 
         default: 'https://www.nfthost.app/assets/logo.png'
     },
     isBanned: {
-        type:Boolean,
+        type: Boolean,
         default: false
+    },
+    customerId: {
+        type: String,
+        default: 'none'
     },
     services: {
         generator: {
-            generationCount: {
-                type: Number,
-                default: 0
-            },
-            freeGeneration: {
+            units: {
                 type: Number,
                 default: 0
             },
         },
         website: {
-            websiteCount: {
-                type: Number,
-                default: 0
-            },
-            freeWebsite: {
+            units: {
                 type: Number,
                 default: 0
             }
         },
         utils: {
-            freeUtil: {
+            units: {
                 type: Number,
                 default: 0
             }

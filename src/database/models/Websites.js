@@ -3,129 +3,128 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const WebsitesSchema = new Schema({
-    data: {
-        type:String,
-        default: ''
-    },
     memberId: {
-        type:Schema.ObjectId, 
+        type: Schema.ObjectId, 
         default: null
     },
     isPremium: {
-        type:Boolean,
+        type: Boolean,
         default: false
     },
     isExpired: {
-        type:Boolean,
+        type: Boolean,
+        default: false
+    },
+    isPublished: {
+        type: Boolean,
         default: false
     },
     premiumStartDate: {
-        type:Date,
+        type: Date,
+        default: null
+    },
+    premiumEndDate: {
+        type: Date,
         default: null
     },
     revealDate: {
-        type:Date,
+        type: Date,
         default: null
+    },
+    route: {
+        type: String,
+        default: '',
+        required: true
+    },
+    subscriptionId: {
+        type: String,
+        default: '',
     },
     components: {
         title: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         unrevealedImage: {
-            type:String,
+            type: String,
             default: 'https://www.nfthost.app/assets/logo.png',
             required: true
         },
         description: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         embed: {
-            type:String,
+            type: String,
             default: '',
             required: true
         },
         script: {
-            type:String,
+            type: String,
             default: ''
         },
         addons: {
-            type:Array,
+            type: [String],
             default: []
         },
-        templates: {
-            type:Array,
-            default: []
+        template: {
+            type: String,
+            default: 'Template1'
         }
     },
     meta: {
         robot: {
-            type:String,
+            type: String,
             default: 'if'
         },
         favicon: {
-            type:String,
+            type: String,
             default: 'https://www.nfthost.app/favicon.ico'
         },
         language: {
-            type:String,
+            type: String,
             default: 'EN'
         }
     },
-    analytics: {
-        uniqueVisits : {
-            type:Number,
-            default: 0
-        },
-        clickedOnEmbed : {
-            type:Number,
-            default: 0
-        },
-        referrers : {
-            type:Array,
-            default: []
-        }
-    },
-    external_links: {
+    externalLinks: {
         twitter: {
-            type:String,
+            type: String,
             default: ''
         },
         instagram: {
-            type:String,
+            type: String,
             default: ''
         },
         youtube: {
-            type:String,
+            type: String,
             default: ''
         },
         tiktok: {
-            type:String,
+            type: String,
             default: ''
         },
         discord: {
-            type:String,
+            type: String,
             default: ''
         },
         reddit: {
-            type:String,
+            type: String,
             default: ''
         },
         facebook: {
-            type:String,
+            type: String,
+            default: ''
+        },
+        opensea: {
+            type: String,
             default: ''
         }
     },
     custom: {
         domain: {
-            type:String,
-            default: ''
-        },
-        alias: {
-            type:String,
+            type: String,
             default: ''
         }
     },
