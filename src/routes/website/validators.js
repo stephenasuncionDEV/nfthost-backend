@@ -278,9 +278,5 @@ exports.UpdateSubscriptionValidator = [
     .notEmpty(),
 
     check('isPublished', 'isPublished is empty')
-    .notEmpty(),
-
-    check('premiumStartDate', 'premiumStartDate is empty')
     .notEmpty()
-
 ]

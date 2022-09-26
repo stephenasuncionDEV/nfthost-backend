@@ -25,10 +25,11 @@ exports.createWebsite = async (req, res, next) => {
             const user = await Member.findOne({ _id: memberId });
             if (user.services.website.units === 1) {
                 const webArr = await Website.find({ memberId });
-
-                newWebsite.isPremium = true;
-                newWebsite.subscriptionId = webArr[0].subscriptionId;
-                newWebsite.premiumStartDate = webArr[0].premiumStartDate;
+                if (webArr.length > 0) {
+                    newWebsite.isPremium = true;
+                    newWebsite.subscriptionId = webArr[0].subscriptionId;
+                    newWebsite.premiumStartDate = webArr[0].premiumStartDate;
+                }
             }
         }
 
