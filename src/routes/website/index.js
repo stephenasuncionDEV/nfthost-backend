@@ -39,7 +39,7 @@ router.delete('/delete', authenticateToken, DeleteWebsiteValidator, controller.d
 router.get('/getWebsiteByRoute', authenticateThirdPartyToken, GetWebsiteByRouteValidator, controller.getWebsiteByRoute);
 router.get('/getWebsiteByDomain', authenticateThirdPartyToken, GetWebsiteByDomainValidator, controller.getWebsiteByDomain);
 router.get('/getWebsites', authenticateToken, GetWebsitesValidator, controller.getWebsites);
-router.get('/getWebsitesWithSubdomain', authenticateThirdPartyToken, controller.getWebsitesWithSubdomain);
+router.get('/getMappedSubdomains', authenticateThirdPartyToken, controller.getMappedSubdomains);
 router.patch('/updateData', authenticateToken, UpdateDataValidator, controller.updateData);
 router.patch('/updateIsPremium', authenticateToken, UpdateIsPremiumValidator, controller.updateIsPremium);
 router.patch('/updateIsExpired', authenticateToken, UpdateIsExpiredValidator, controller.updateIsExpired);

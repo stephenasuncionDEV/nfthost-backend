@@ -675,7 +675,7 @@ exports.updateSubscription = async (req, res, next) => {
     }
 }
 
-exports.getWebsitesWithSubdomain = async (req, res, next) => {
+exports.getMappedSubdomains = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
