@@ -236,13 +236,16 @@ exports.UpdateLanguageValidator = [
     
 ]
 
-exports.UpdateExternalLinksValidator = [
+exports.UpdateExternalLinkValidator = [
 
     check('websiteId', 'websiteId is empty')
     .notEmpty(),
 
-    check('externalLinks', 'externalLinks is empty')
-    .notEmpty()
+    check('social', 'social is empty')
+    .notEmpty(),
+
+    // check('link', 'link is empty')
+    // .notEmpty()
     
 ]
 

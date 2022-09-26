@@ -29,6 +29,12 @@ exports.createWebsite = async (req, res, next) => {
                     newWebsite.isPremium = true;
                     newWebsite.subscriptionId = webArr[0].subscriptionId;
                     newWebsite.premiumStartDate = webArr[0].premiumStartDate;
+                } else {
+                    await Member.findOneAndUpdate({ _id: memberId }, {
+                        $set: {
+                            'services.website.units': 0
+                        }
+                    })
                 }
             }
         }
@@ -559,16 +565,16 @@ exports.updateLanguage = async (req, res, next) => {
     }
 }
 
-exports.updateExternalLinks = async (req, res, next) => {
+exports.updateExternalLink = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
 
-        const { websiteId, externalLinks } = req.body;
+        const { websiteId, social, link } = req.body;
 
         const result = await Website.findOneAndUpdate({ _id: websiteId }, {
             $set: { 
-                externalLinks
+                [`externalLinks.${social}`]: link
             }
         }, {
             new: true

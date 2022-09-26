@@ -116,6 +116,10 @@ const WebsitesSchema = new Schema({
         facebook: {
             type: String,
             default: ''
+        },
+        opensea: {
+            type: String,
+            default: ''
         }
     },
     custom: {

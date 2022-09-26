@@ -24,7 +24,7 @@ const {
     UpdateRobotValidator,
     UpdateFaviconValidator,
     UpdateLanguageValidator,
-    UpdateExternalLinksValidator,
+    UpdateExternalLinkValidator,
     UpdateDomainValidator,
     VerifyDomainValidator,
     UpdateSubscriptionValidator
@@ -57,7 +57,7 @@ router.patch('/updateTemplate', authenticateToken, UpdateTemplateValidator, cont
 router.patch('/updateRobot', authenticateToken, UpdateRobotValidator, controller.updateRobot);
 router.patch('/updateFavicon', authenticateToken, UpdateFaviconValidator, controller.updateFavicon);
 router.patch('/updateLanguage', authenticateToken, UpdateLanguageValidator, controller.updateLanguage);
-router.patch('/updateExternalLinks', authenticateToken, UpdateExternalLinksValidator, controller.updateExternalLinks);
+router.patch('/updateExternalLink', authenticateToken, UpdateExternalLinkValidator, controller.updateExternalLink);
 router.patch('/updateDomain', authenticateToken, UpdateDomainValidator, controller.updateDomain);
 router.patch('/verifyDomain', authenticateToken, VerifyDomainValidator, controller.verifyDomain);
 router.patch('/updateSubscription', authenticateToken, UpdateSubscriptionValidator, controller.updateSubscription);
