@@ -680,12 +680,16 @@ exports.getWebsitesWithSubdomain = async (req, res, next) => {
         const errors = validationResult(req).array();
         if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
         
-        const result = await Website.find({ route: {
+        const websites = await Website.find({ route: {
             $exists: true,
             $ne: ''
         } });
 
-        res.status(200).json(result);
+        const mappedSubdomains = websites.map((web) => {
+            return { params: { siteRoute: web.route } }
+        })
+
+        res.status(200).json(mappedSubdomains);
 
     } catch (err) {
         next(err);
