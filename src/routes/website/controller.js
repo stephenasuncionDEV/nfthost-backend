@@ -186,29 +186,6 @@ exports.updateIsPremium = async (req, res, next) => {
     }
 }
 
-exports.updateSubscription = async (req, res, next) => {
-    try {
-        const errors = validationResult(req).array();
-        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
-
-        const { websiteId, isPremium, premiumStartDate } = req.body;
-
-        const result = await Website.findOneAndUpdate({ _id: websiteId }, {
-            $set: {
-                isPremium,
-                premiumStartDate
-            }
-        }, {
-            new: true
-        })
-
-        res.status(200).json(result);
-
-    } catch (err) {
-        next(err);
-    }
-}
-
 exports.updateIsExpired = async (req, res, next) => {
     try {
         const errors = validationResult(req).array();
@@ -634,10 +611,10 @@ exports.updateSubscription = async (req, res, next) => {
             memberId, 
             subscriptionId, 
             isPremium, 
-            isExpired, 
+            isExpired,
+            isPublished,
             premiumStartDate,
-            premiumEndDate,
-            isPublished
+            premiumEndDate
         } = req.body;
 
         let userWebsites = await Website.find({ memberId });
@@ -654,7 +631,7 @@ exports.updateSubscription = async (req, res, next) => {
                 isExpired,
                 isPublished,
                 premiumStartDate,
-                premiumEndDate: premiumEndDate
+                premiumEndDate
             }
         });
 
