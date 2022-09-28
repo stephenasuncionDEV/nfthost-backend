@@ -9,3 +9,13 @@ exports.AddReferralValidator = [
     .notEmpty()
 
 ]
+
+exports.GetReferralValidator = [
+
+    check('name', 'name is empty')
+    .notEmpty(),
+
+    check('service', 'service is empty')
+    .notEmpty()
+
+]

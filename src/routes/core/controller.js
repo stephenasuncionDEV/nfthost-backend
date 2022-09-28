@@ -73,3 +73,20 @@ exports.addReferral = async (req, res, next) => {
         next(err);
     }
 }
+
+exports.getReferral = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).errors;
+        if (errors.length > 0) throw new Error(errors[0].msg);
+
+        const { name, service } = req.query;
+
+        const result = await Core.findOne({ key: 'core' });
+        const referral = result.referrals.find((referral) => referral.service === service && referral.name === name);
+
+        res.status(200).json(referral);
+
+    } catch (err) {
+        next(err);
+    }
+}
