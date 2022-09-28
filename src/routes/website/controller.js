@@ -72,8 +72,6 @@ exports.getWebsiteByRoute = async (req, res, next) => {
         
         const { route } = req.query;
 
-        console.log("getting route", route)
-
         const result = await Website.findOne({ route });
 
         if (!result) throw new Error('Minting website not found');
