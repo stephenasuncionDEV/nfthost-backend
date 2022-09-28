@@ -30,7 +30,7 @@ exports.addReferral = async (req, res, next) => {
         const errors = validationResult(req).errors;
         if (errors.length > 0) throw new Error(errors[0].msg);
 
-        const { name } = req.body;
+        const { name, service } = req.body;
 
         const nameTemp = name.trim().toLowerCase();
 
@@ -40,7 +40,8 @@ exports.addReferral = async (req, res, next) => {
         if (!newUser) {
             newUser = {
                 name: nameTemp,
-                value: 0
+                value: 0,
+                service 
             }
         }
 
@@ -48,7 +49,8 @@ exports.addReferral = async (req, res, next) => {
 
         let coreRes = await Core.findOneAndUpdate({ 
             key: 'core',
-            'referrals.name': newUser.name
+            'referrals.name': newUser.name,
+            'referrals.service': newUser.service
         }, {
             $set: {
                 'referrals.$.value': newUser.value
