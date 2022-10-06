@@ -149,9 +149,6 @@ exports.UpdateLogoValidator = [
 exports.UpdateScriptValidator = [
 
     check('websiteId', 'websiteId is empty')
-    .notEmpty(),
-
-    check('script', 'script is empty')
     .notEmpty()
 
 ]
