@@ -1,6 +1,6 @@
 <p align="center">
     <a href='https://www.nfthost.app/' rel='nofollow'>
-        <img src='https://www.nfthost.app/assets/logo.svg' alt='NFTHost Logo'/>
+        <img src='https://www.nfthost.app/assets/logo.png' alt='NFTHost Logo' width='125px'/>
     </a>
 </p>
 
