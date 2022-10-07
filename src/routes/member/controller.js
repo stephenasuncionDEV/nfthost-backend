@@ -1,6 +1,8 @@
 const { generateAccessToken, generateRefreshToken } = require('#middlewares/jwt.js');
 const { validationResult } = require('express-validator');
 const { Member } = require('#models/Members.js');
+const { Payment } = require('#models/Payments.js');
+const { Website } = require('#models/Websites.js');
 const { Token } = require('#models/Tokens.js');
 const jwt = require('jsonwebtoken');
 
@@ -167,6 +169,26 @@ exports.renewToken = async (req, res, next) => {
 
             res.json({ accessToken: accessToken });
         })
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.delete = async (req, res, next) => {
+    try {
+        const errors = validationResult(req).array();
+        if (errors.length > 0) throw new Error(errors.map(err => err.msg).join(', '));
+
+        const { memberId } = req.body;
+
+        await Payment.deleteMany({ memberId });
+        await Website.deleteMany({ memberId });
+        const result = await Member.deleteOne({ _id: memberId });
+        
+        if (!result) throw new Error('Cannot delete user at the moment');
+
+        res.status(204).json({ message: 'Successfully deleted user' });
 
     } catch (err) {
         next(err);

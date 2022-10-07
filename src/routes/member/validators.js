@@ -62,3 +62,10 @@ exports.RenewTokenValidator = [
     .notEmpty(),
 
 ]
+
+exports.DeleteValidator = [
+
+    check('memberId', 'memberId is empty')
+    .notEmpty()
+
+]

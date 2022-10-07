@@ -7,7 +7,8 @@ const {
     DeductUnitValidator,
     UpdateEmailValidator,
     LogoutValidator,
-    RenewTokenValidator
+    RenewTokenValidator,
+    DeleteValidator
 } = require('./validators');
 const { authenticateToken } = require('#middlewares/jwt.js');
 
@@ -16,7 +17,8 @@ router.get('/getByAddress', authenticateToken, GetMemberByAddressValidator, cont
 router.patch('/addUnit', authenticateToken, AddUnitValidator, controller.addUnit);
 router.patch('/deductUnit', authenticateToken, DeductUnitValidator, controller.deductUnit);
 router.patch('/updateEmail', authenticateToken, UpdateEmailValidator, controller.updateEmail);
-router.delete('/logout', LogoutValidator, controller.logout);
+router.delete('/logout', authenticateToken, LogoutValidator, controller.logout);
 router.post('/renewToken', RenewTokenValidator, controller.renewToken);
+router.delete('/delete', authenticateToken, DeleteValidator, controller.delete);
 
 module.exports = router;
