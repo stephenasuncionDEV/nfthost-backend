@@ -663,7 +663,7 @@ exports.getMappedSubdomains = async (req, res, next) => {
         } });
 
         const mappedSubdomains = websites.map((web) => {
-            return { params: { siteRoute: web.route ?? 'test' } }
+            return { params: { siteRoute: web.route } }
         })
 
         res.status(200).json(mappedSubdomains);
