@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "dotenv": "^16.0.2",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.0"
   },
   "imports": {
     "#database/*": "./src/database/*",
