@@ -74,8 +74,6 @@ exports.getWebsiteByRoute = async (req, res, next) => {
 
         const result = await Website.findOne({ route });
 
-        //if (!result) throw new Error('Minting website not found');
-
         res.status(200).json(result);
 
     } catch (err) {
@@ -90,36 +88,9 @@ exports.getWebsiteByDomain = async (req, res, next) => {
         
         const { domain } = req.query;
 
-        let result;
-
-        if (domain.indexOf('www.') === -1) { // If alias
-            
-        }
-        else { // If cname
-            
-        }
+        const result = await Website.findOne({ "custom.domain": domain });
 
         res.status(200).json(result);
-
-        //const tempDomain = domain.toLowerCase();
-
-        // const expression = { $regex: new RegExp('^' + tempDomain + '$', 'i') };
-
-        // // Check if websiteId is a custom domain
-        // count = await Website.count({ [`custom.domain`]: expression });
-        // if (count > 0) {
-        //     const result = await Website.findOne({ [`custom.domain`]: expression });
-        //     res.status(200).json(result);
-        //     return;
-        // }
-
-        // Check if websiteId is a custom alias
-        // count = await Website.count({ [`custom.alias`]: expression });
-        // if (count > 0) {
-        //     const result = await Website.findOne({ [`custom.alias`]: expression });
-        //     res.status(200).json(result);
-        //     return;
-        // }
 
     } catch (err) {
         next(err);
@@ -571,13 +542,16 @@ exports.updateDomain = async (req, res, next) => {
 
         const { websiteId, domain } = req.body;
 
+        const verifiedDns = await VerifyDns(domain);
+        if (!verifiedDns.status) throw new Error(verifiedDns.message);
+
         const result = await Website.findOneAndUpdate({ _id: websiteId }, {
             $set: {
                 'custom.domain': domain
             }
         }, {
             new: true
-        })
+        })    
 
         res.status(200).json(result);
 
