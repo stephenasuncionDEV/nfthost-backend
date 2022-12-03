@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest -i",
     "dev": "nodemon index.js",
-    "start": "vercel dev"
+    "start": "vercel dev",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
