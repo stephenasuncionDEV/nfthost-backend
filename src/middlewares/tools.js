@@ -12,25 +12,19 @@ module.exports.ParseWebsiteData = (data) => {
 module.exports.VerifyDns = (domain) => {
   return new Promise((resolve) => {
     try {
-      dns.resolveAny(domain, (err, records) => {
-        if (err || !records)
-          return resolve({
-            message: "Cannot find domain's DNS records.",
-            status: false,
-          });
-
-        const aliases = records.filter((record) => record.type === "A");
-        if (!aliases)
+      dns.resolveNs(domain, (err, addresses) => {
+        if (err || !addresses) {
           return resolve({
             message:
-              "Please ask staff to verify your custom domain on Discord.",
+              "Please make sure you are using the right nameservers. Err: 0x1",
             status: false,
           });
+        }
 
-        if (!aliases[0].address.startsWith("76.76.21."))
+        if (!addresses[0].indexOf("vercel-dns.com") === -1)
           return resolve({
             message:
-              "Please ask staff to verify your custom domain on Discord.",
+              "Please make sure you are using the right nameservers. Err: 0x2",
             status: false,
           });
 

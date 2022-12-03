@@ -622,8 +622,30 @@ exports.updateDomain = async (req, res, next) => {
 
     const { websiteId, domain } = req.body;
 
-    const verifiedDns = await VerifyDns(domain);
-    if (!verifiedDns.status) throw new Error(verifiedDns.message);
+    const verification = await VerifyDns(domain);
+    if (!verification.status) throw new Error(verification.message);
+
+    // this only add example.com not www.example.com
+    const domainRes = await fetch(
+      `https://api.vercel.com/v9/projects/${process.env.VERCEL_PROJECT_ID}/domains`,
+      {
+        body: `{\n  "name": "${domain}"\n}`,
+        headers: {
+          Authorization: `Bearer ${process.env.VERCEL_AUTH_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      },
+    );
+
+    const domainData = await domainRes.json();
+
+    if (domainData.error) {
+      throw new Error(domainData.error.message);
+    }
+
+    if (!domainData.verified)
+      throw new Error("Make sure your domain uses right nameservers.");
 
     const domainCount = await Website.count({ "custom.domain": domain });
     if (domainCount > 0) throw new Error("Domain already used.");
