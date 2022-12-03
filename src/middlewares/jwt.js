@@ -19,12 +19,10 @@ module.exports.authenticateToken = (req, res, next) => {
     return res.status(401).json({ message: "Invalid access token" });
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
     if (err)
-      return res
-        .status(403)
-        .json({
-          message: "Your access token has expired please re-log in",
-          isExpired: true,
-        });
+      return res.status(403).json({
+        message: "Your access token has expired please re-log in",
+        isExpired: true,
+      });
     next();
   });
 };
